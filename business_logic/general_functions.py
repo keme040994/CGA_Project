@@ -1,6 +1,6 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: March, 2016.
-# Updated at: March, 2016.
+# Updated at: April, 2016.
 
 # LIBRARIES
 from business_logic.pnml_functions import *
@@ -15,6 +15,20 @@ import sys
 
 # FUNCTION: get_positions
 def get_positions(matrix_a, matrix_b):
+    """
+    Obtains the positions where two matrices differ in a list of tuples.
+
+    Args:
+        matrix_a : MATRIX[[INT, INT, ...], [INT, INT, ...], ...]
+            This matrix is the representation of the genes
+
+        matrix_b : MATRIX[[INT, INT, ...], [INT, INT, ...], ...]
+            This matrix is the representation of the genes
+
+    Returns:
+        LIST[TUPLE, TUPLE]
+            A list of tuple with the following format: (x, y)
+    """
     positions = []
     for i in range(0, len(matrix_a)):
         for j in range(0, len(matrix_a)):
@@ -25,11 +39,43 @@ def get_positions(matrix_a, matrix_b):
 
 # FUNCTION: calculate_hamming_distance
 def calculate_hamming_distance(matrix_a, matrix_b):
+    """
+    Calculates the hamming distance between two matrices.
+
+    Args:
+        matrix_a : MATRIX[[INT, INT, ...], [INT, INT, ...], ...]
+            This matrix is the representation of the genes
+
+        matrix_b : MATRIX[[INT, INT, ...], [INT, INT, ...], ...]
+            This matrix is the representation of the genes
+
+    Returns:
+        INT
+            The hamming distance value
+    """
     return len(get_positions(matrix_a, matrix_b))
 
 
 # FUNCTION: select_best_chromosomes
 def select_best_chromosomes(population, pop_size, likelihood_function, rep):
+    """
+    Given a population, this function returns the best chromosomes.
+
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+        pop_size : INT
+            The size of the population
+        likelihood_function : INT
+            Indicates the likelihood function that is going to be used
+                1 = cotemporal, 2 = next_step_one, 3 = next_step_one_two
+        rep : LIST[rep1, rep2, rep3, ...]
+            A repN is a biological data used to calc the likelihood result
+
+    Returns:
+        LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects, containing the new population
+    """
     likelihood_result_calculator(population, likelihood_function, rep)
     relative_likelihood_result_calculator(population)
     relative_likelihood_result_sorting(population)
@@ -38,12 +84,28 @@ def select_best_chromosomes(population, pop_size, likelihood_function, rep):
 
 # FUNCTION: select_the_best_chromosome
 def select_the_best_chromosome(population, likelihood_function, rep):
+    """
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+        likelihood_function : INT
+            Indicates the likelihood function that is going to be used
+                1 = cotemporal, 2 = next_step_one, 3 = next_step_one_two
+        rep : LIST[rep1, rep2, rep3, ...]
+            A repN is a biological data used to calc the likelihood result
+
+    Returns:
+        Chromosome()
+            The best chromosome in the population
+    """
     likelihood_result_calculator(population, likelihood_function, rep)
     relative_likelihood_result_calculator(population)
     relative_likelihood_result_sorting(population)
     return population[0]
 
-# ==========================================================================
+
+# ======================================================================================================================
+
 
 # FUNCTION: filter_likelihood_selection
 def filter_likelihood_selection(num):

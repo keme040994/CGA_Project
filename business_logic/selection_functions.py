@@ -1,6 +1,6 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: March, 2016.
-# Updated at: March, 2016.
+# Updated at: April, 2016.
 
 # LIBRARIES
 from business_logic.chromosome import Chromosome
@@ -13,8 +13,8 @@ from random import randint
 # SELECTION FUNCTIONS
 # ===================
 
-# FUNCTION: ranked_selection_calculator
-def ranked_selection_calculator(ordered_population):
+# FUNCTION: fitness_calculator
+def fitness_calculator(ordered_population):
     """
     Calculates the 'fitness' that will be used for doing a rank based selection.
 
@@ -29,6 +29,19 @@ def ranked_selection_calculator(ordered_population):
 
 # FUNCTION: selection_function
 def selection_function(population, threshold):
+    """
+    Creates a new generation of chromosomes, based on the CHC Algorithm.
+
+    Args:
+        population : LIST[Chromosome]
+            A list filled with 'Chromosome' objects
+        threshold : INT
+            The limit used as a filter in the algorithm
+
+    Returns:
+        LIST[Chromosome]
+            A list filled with 'Chromosome' objects, containing the new population
+    """
     population_visited = [i for i in range(0, len(population))]
     children_population = []
     for i in range(1, len(population)//2):
@@ -55,6 +68,20 @@ def selection_function(population, threshold):
 
 # FUNCTION: HUX_crossover_function
 def HUX_crossover_function(parent_a, parent_b):
+    """
+    The HUX crossover (Half Uniform Crossover) consists in finding all the bits that differ between two parents and
+    swapping the half of this bits, creating two new offsprings.
+
+    Args:
+        parent_a : Chromosome
+            An object 'Chromosome' that will be used for mating
+        parent_b : Chromosome
+            An object 'Chromosome' that will be used for mating
+
+    Returns:
+        TUPLE(Chromosome, Chromosome)
+            A tuple formed by two offsprings, represented by a 'Chromosome' object
+    """
     genes_a = deepcopy(parent_a.get_genes())
     genes_b = deepcopy(parent_b.get_genes())
 
@@ -66,4 +93,3 @@ def HUX_crossover_function(parent_a, parent_b):
         genes_a[x][y], genes_b[x][y] = genes_b[x][y], genes_a[x][y]
         positions.remove(positions[index_pos])
     return Chromosome(genes_a), Chromosome(genes_b)
-
