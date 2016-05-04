@@ -3,6 +3,10 @@
 #      Original version
 # February 2016:
 #      Significant improvement to commenting
+# April 2016
+#      - Fixed a division problem in computing the
+#      average of the parents value (1/_r) with (1/float(_r))
+#      - Fixed division by 2 in answer3 to be division by 2.0
 
 # LIBRARIES
 import functools
@@ -55,7 +59,7 @@ def pnml_cotemporal(di_graph, rep):
         if _r == 1:
             __avg_parent_data = _parent_data[0]
         else:
-            __avg_parent_data = (1/_r)*functools.reduce(lambda x, y: x+y, _parent_data)
+            __avg_parent_data = (1/float(_r))*functools.reduce(lambda x, y: x+y, _parent_data)
 
         # There are a number of values that used in numerous places
         # in the calculation of the likelihood.  Some of these are
@@ -124,7 +128,7 @@ def pnml_cotemporal(di_graph, rep):
                     _val[2*_r+_index]
 
         # xxxtemp raised to (-r*t+1)/2 power
-        _answer3 *= math.pow(_xxxtemp, -(_r*_t+1)/2)
+        _answer3 *= math.pow(_xxxtemp, -(_r*_t+1)/2.0)
 
     # putting all the three major pieces together
     _MLwithParents = _answer3*_answer1/_answer2
@@ -168,7 +172,7 @@ def pnml_next_step_one(di_graph, rep):
         if _r == 1:
             __avg_parent_data = _parent_data[0]
         else:
-            __avg_parent_data = (1/_r)*functools.reduce(lambda x, y: x+y, _parent_data)
+            __avg_parent_data = (1/float(_r))*functools.reduce(lambda x, y: x+y, _parent_data)
 
         # There are a number of values that used in numerous places
         # in the calculation of the likelihood.  Some of these are
@@ -237,7 +241,7 @@ def pnml_next_step_one(di_graph, rep):
                     _val[2*_r+_index]
 
         # xxxtemp raised to (-r*t+1)/2 power
-        _answer3 *= math.pow(_xxxtemp, -(_r*(_t-1)+1)/2)
+        _answer3 *= math.pow(_xxxtemp, -(_r*(_t-1)+1)/2.0)
 
     # putting all the three major pieces together
     _MLwithParents = _answer3*_answer1/_answer2
@@ -281,7 +285,7 @@ def pnml_next_step_one_two(di_graph, rep):
         if _r == 1:
             __avg_parent_data = _parent_data[0]
         else:
-            __avg_parent_data = (1/_r)*functools.reduce(lambda x, y: x+y, _parent_data)
+            __avg_parent_data = (1/float(_r))*functools.reduce(lambda x, y: x+y, _parent_data)
 
         # There are a number of values that used in numerous places
         # in the calculation of the likelihood.  Some of these are
@@ -350,7 +354,7 @@ def pnml_next_step_one_two(di_graph, rep):
                     _val[2*_r+_index]
 
         # xxxtemp raised to (-r*t+1)/2 power
-        _answer3 *= math.pow(_xxxtemp, -(_r*(_t-2)+1)/2)
+        _answer3 *= math.pow(_xxxtemp, -(_r*(_t-2)+1)/2.0)
 
     # putting all the three major pieces together
     _MLwithParents = _answer3*_answer1/_answer2
