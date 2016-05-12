@@ -1,6 +1,6 @@
 # Created by: Dr. David John & Kenneth Meza.
-# Created at: March, 2016.
-# Updated at: March, 2016.
+# Created at: January, 2016.
+# Updated at: May, 2016.
 
 
 # CLASS: Chromosome
@@ -28,7 +28,7 @@ class Chromosome:
     # CONSTRUCTOR
     def __init__(self, genes):
         self.genes = genes
-        self.likelihood_result = None
+        self.log_likelihood_result = None
         self.relative_likelihood_result = None
         self.fitness = None
 
@@ -39,11 +39,11 @@ class Chromosome:
     def set_genes(self, genes):
         self.genes = genes
 
-    def get_likelihood_result(self):
-        return self.likelihood_result
+    def get_log_likelihood_result(self):
+        return self.log_likelihood_result
 
-    def set_likelihood_result(self, likelihood_result):
-        self.likelihood_result = likelihood_result
+    def set_log_likelihood_result(self, log_likelihood_result):
+        self.log_likelihood_result = log_likelihood_result
 
     def get_relative_likelihood_result(self):
         return self.relative_likelihood_result
@@ -89,7 +89,7 @@ class Chromosome:
         msg = ""
         for i in range(0, len(self.genes)):
             msg += str(self.genes[i]) + "\n"
-        msg += "Likelihood Result: " + str(self.likelihood_result) + "\n"
+        msg += "Log Likelihood Result: " + str(self.log_likelihood_result) + "\n"
         msg += "Relative Likelihood Result: " + str(self.relative_likelihood_result) + "\n"
         msg += "Fitness: " + str(self.fitness) + "\n"
         msg += "Num. Ones: " + str(self.counter_ones())

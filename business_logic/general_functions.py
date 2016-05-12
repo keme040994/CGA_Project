@@ -1,9 +1,10 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: March, 2016.
-# Updated at: April, 2016.
+# Updated at: May, 2016.
 
 # LIBRARIES
-from business_logic.pnml_functions import *
+import bigfloat as bf
+from business_logic.log_pnml_functions import *
 import networkx as nx
 import numpy as np
 import sys
@@ -157,15 +158,15 @@ def likelihood_result_calculator(population, likelihood_function, rep):
     if likelihood_function == 1:
         for i in range(0, len(population)):
             di_graph = convert_matrix_to_digraph(population[i].get_genes())
-            population[i].set_likelihood_result(pnml_cotemporal(di_graph, rep))
+            population[i].set_log_likelihood_result(log_pnml_cotemporal(di_graph, rep))
     elif likelihood_function == 2:
         for i in range(0, len(population)):
             di_graph = convert_matrix_to_digraph(population[i].get_genes())
-            population[i].set_likelihood_result(pnml_next_step_one(di_graph, rep))
+            population[i].set_log_likelihood_result(log_pnml_next_step_one(di_graph, rep))
     elif likelihood_function == 3:
         for i in range(0, len(population)):
             di_graph = convert_matrix_to_digraph(population[i].get_genes())
-            population[i].set_likelihood_result(pnml_next_step_one_two(di_graph, rep))
+            population[i].set_log_likelihood_result(log_pnml_next_step_one_two(di_graph, rep))
 
 
 # FUNCTION: relative_likelihood_result_sorting
@@ -190,9 +191,11 @@ def relative_likelihood_result_calculator(population):
         population : LIST[Chromosome(), Chromosome(), ...]
             A list filled with 'Chromosome' objects
     """
-    total = sum_likelihood_result(population)
-    for i in range(0, len(population)):
-        population[i].set_relative_likelihood_result(population[i].get_likelihood_result()/total)
+    with bf.quadruple_precision:
+        total = sum_likelihood_result(population)
+        for i in range(0, len(population)):
+            log_likelihood_result = bf.exp(bf.BigFloat(str(population[i].get_log_likelihood_result())))
+            population[i].set_relative_likelihood_result(float(bf.div(log_likelihood_result, total)))
 
 
 # FUNCTION: sum_likelihood_result
@@ -208,9 +211,11 @@ def sum_likelihood_result(population):
         INT
             The sum of all likelihood results on a population
     """
-    total = 0
-    for i in range(0, len(population)):
-        total += population[i].get_likelihood_result()
+    with bf.quadruple_precision:
+        total = bf.BigFloat("0.0")
+        for i in range(0, len(population)):
+            log_likelihood_result = bf.exp(bf.BigFloat(str(population[i].get_log_likelihood_result())))
+            total = bf.add(total, log_likelihood_result)
     return total
 
 
