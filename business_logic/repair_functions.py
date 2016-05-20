@@ -1,6 +1,6 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: March, 2016.
-# Updated at: March, 2016.
+# Updated at: May, 2016.
 
 # LIBRARIES
 from business_logic.chromosome import Chromosome
@@ -18,8 +18,10 @@ def repair_population(population):
     """
     Repairs a DAG when it has cycles to be deleted. This function runs 3 important steps:
         I) Eliminates cycles on the diagonal of the matrix
-        II) Eliminates ones that appear more than 3 times on each column of the matrix
-        III) Eliminates the edges that appears more in the cycles and breaks simple cycles
+        II) Restricts the number of edges on each column by 3 maximum. If the number of edges is bigger than 3, the
+        algorithm eliminates edges randomly
+        III) Break edges that appear the most in the cycles, for breaking as many cycles as possible, until no more
+        cycles are found in the matrix
 
     Args:
         population : LIST[Chromosome(), Chromosome(), ...]

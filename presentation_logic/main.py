@@ -1,10 +1,9 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: March, 2016.
-# Updated at: April, 2016.
+# Updated at: May, 2016.
 
 # LIBRARIES
-from business_logic.amalgamated_model_functions import *
-from business_logic.composite_model_functions import *
+from business_logic.models_functions import *
 from business_logic.initialization_functions import *
 from business_logic.mutation_functions import *
 from business_logic.repair_functions import *
@@ -12,6 +11,7 @@ from business_logic.selection_functions import *
 from copy import deepcopy
 from data_logic.data_functions import *
 import data_logic.data_input as data
+import os
 from presentation_logic.IO_functions import *
 
 
@@ -66,6 +66,7 @@ def main():
                 current_population = select_best_chromosomes(full_population, pop_size, likelihood_function, data.rep)
 
             if threshold < 0:
+                print("\t\t- The mutation is being applied...")
                 cant_mutations = (cant_genes*cant_genes*per_mutations)//100
                 current_population = cataclysmic_mutation(select_the_best_chromosome(current_population,
                                                                                      likelihood_function, data.rep),
@@ -88,60 +89,67 @@ def main():
         relative_likelihood_result_sorting(current_population)
         fitness_calculator(current_population)
 
-        # The last chromosome is taken for creating the amalgamated model
-        last_chromosome = Chromosome(deepcopy(current_population[-1].get_genes()))
-        amalgamated_population.append(last_chromosome)
-        write_matrix_file("../" + data.a_name + " - " + str(i + 1) + " (Last Chromosome).txt",
-                          last_chromosome.get_genes())
+        # All the chromosomes in the unique current population are appended to the amalgamated population
+        for chromosome in current_population:
+            amalgamated_population.append(Chromosome(deepcopy(chromosome.get_genes())))
 
-        # Creating, storing and displaying of the composite model
+        # Creating and displaying of the composite model
         print("* Creating the composite model...")
-        composite_model = composite_model_creator(current_population, cant_genes)
+        composite_model = model_creator(current_population, cant_genes, likelihood_function)
         print("\tcreated.\n")
-
-        if likelihood_function == 1:
-            composite_model = sum_matrix(composite_model, transpose_matrix(composite_model))
 
         view_model(composite_model, "COMPOSITE MODEL (ROUNDED TO 3 DECIMALS)")
 
-        if likelihood_function == 1:
-            create_model_image_cotemporal(convert_model_to_digraph(composite_model, per_filter_cm, data.a_protein_names),
-                                          data.a_name + " - " + str(i + 1) + " (Composite Model)")
-        else:
-            create_model_image(convert_model_to_digraph(composite_model, per_filter_cm, data.a_protein_names),
-                               data.a_name + " - " + str(i + 1) + " (Composite Model)")
+        print("\n* Creating the image...")
+        create_model_image(convert_model_to_digraph(composite_model, per_filter_cm, data.a_protein_names),
+                           data.a_name + " - " + str(i + 1) + " (Composite Model)", likelihood_function)
+        print("\tcreated.")
 
-        print("\n* Creating the image...\n\tcreated.")
+        print("* Creating the file...")
         write_matrix_file("../" + data.a_name + " - " + str(i + 1) + " (Composite Mode).txt", composite_model)
-        print("* Creating the file...\n\tcreated.")
+        print("\tcreated.")
+
         print("* Done.\n")
 
     print("...................................\n")
 
     print("* GENERATING AMALGAMATED MODEL")
-    # Creating, storing and displaying of the amalgamated model
+    # Creating and displaying of the amalgamated model
     print("* Creating the amalgamated model...")
 
     likelihood_result_calculator(amalgamated_population, likelihood_function, data.rep)
     relative_likelihood_result_calculator(amalgamated_population)
+
+    # Removing from the amalgamated population the repeated chromosomes
+    amalgamated_population = select_uniques_chromosomes(amalgamated_population)
+    print("\t\t- The amalgamated population ends with " + str(len(amalgamated_population)) + " unique chromosomes.")
+
+    # Recalculation of 'likelihood' values and fitness on the amalgamated population (unique chromosomes)
+    likelihood_result_calculator(amalgamated_population, likelihood_function, data.rep)
+    relative_likelihood_result_calculator(amalgamated_population)
     relative_likelihood_result_sorting(amalgamated_population)
-    if likelihood_function == 1:
-        amalgamated_model = amalgamated_model_creator_cotemporal(amalgamated_population, cant_genes)
-    else:
-        amalgamated_model = amalgamated_model_creator(amalgamated_population, cant_genes)
+    fitness_calculator(amalgamated_population)
+
+    # Creation of the folder where the amalgamated population's files are going to be stored
+    if not os.path.exists("../Chromosomes for Amalgamated Model"):
+        os.makedirs("../Chromosomes for Amalgamated Model")
+    for i in range(0, len(amalgamated_population)):
+        write_matrix_file("../Chromosomes for Amalgamated Model/Chromosome " + str(i + 1) + ".txt", composite_model)
+
+    amalgamated_model = model_creator(amalgamated_population, cant_genes, likelihood_function)
     print("\tcreated.\n")
+
     view_model(amalgamated_model, "AMALGAMATED MODEL (ROUNDED TO 3 DECIMALS)")
 
-    if likelihood_function == 1:
-        create_model_image_cotemporal(convert_model_to_digraph(amalgamated_model, per_filter_am, data.a_protein_names),
-                                      data.a_name + " (AMALGAMATED MODEL)")
-    else:
-        create_model_image(convert_model_to_digraph(amalgamated_model, per_filter_am, data.a_protein_names),
-                           data.a_name + " (AMALGAMATED MODEL)")
+    print("\n* Creating the image...")
+    create_model_image(convert_model_to_digraph(amalgamated_model, per_filter_am, data.a_protein_names),
+                       data.a_name + " (AMALGAMATED MODEL)", likelihood_function)
+    print("\tcreated.")
 
-    print("\n* Creating the image...\n\tcreated.")
+    print("* Creating the file...")
     write_matrix_file("../" + data.a_name + " (AMALGAMATED MODEL).txt", amalgamated_model)
-    print("* Creating the file...\n\tcreated.")
+    print("\tcreated.")
+
     print("* Done.\n")
     # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
