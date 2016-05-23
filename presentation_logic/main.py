@@ -25,14 +25,14 @@ def main():
 
     # Initial Variables
     pop_size = 250  # Population size
-    cant_genes = 12  # Amount of genes for each chromosome. The matrix's size will be: cant_genes*cant_genes
+    num_genes = 12  # Amount of genes for each chromosome. The matrix's size will be: num_genes*num_genes
     per_ones = 5  # Percentage of 'ones' to put on every chromosome on the initial population, based on matrix's size
     likelihood_function = 1  # 1 = cotemporal, 2 = next_step_one, 3 = next_step_one_two
     per_mutations = 35  # Percentage of mutations. The scale is from 0 to 100
     per_filter_cm = 0.7  # Percentage for filtering values in the composite model
     per_filter_am = 0.7  # Percentage for filtering values in the amalgamated model
-    cant_matings = 500  # Amount of matings (generations)
-    cant_composite_model = 12  # Amount of composite models
+    num_matings = 500  # Amount of matings (generations)
+    num_composite_model = 12  # Amount of composite models
 
     filter_likelihood_selection(likelihood_function)
 
@@ -41,19 +41,19 @@ def main():
 
     print("=== CHAOTIC GENETIC ALGORITHM ===\n")
     amalgamated_population = []  # contains the chromosomes that will be used for creating the amalgamated model
-    for i in range(0, cant_composite_model):
+    for i in range(0, num_composite_model):
         print("* GENERATING COMPOSITE MODEL " + str(i + 1))
 
         # Creation of the initial population using "seeding" method. See the function documentation.
         print("* Creating the initial population...")
-        current_population = seed_population(pop_size, cant_genes, per_ones, likelihood_function, data.rep)
+        current_population = seed_population(pop_size, num_genes, per_ones, likelihood_function, data.rep)
         print("* Initial Population created, having " + str(len(select_uniques_chromosomes(current_population))) +
               " unique chromosomes.")
 
-        threshold = ((cant_genes * cant_genes) - cant_genes) // 4
+        threshold = ((num_genes * num_genes) - num_genes) // 4
         print("* Threshold: " + str(threshold))
 
-        for j in range(0, cant_matings):
+        for j in range(0, num_matings):
             print("* Working on generation " + str(j + 1) + "...")
 
             # Selection
@@ -67,12 +67,12 @@ def main():
 
             if threshold < 0:
                 print("\t\t- The mutation is being applied...")
-                cant_mutations = (cant_genes*cant_genes*per_mutations)//100
+                num_mutations = (num_genes*num_genes*per_mutations)//100
                 current_population = cataclysmic_mutation(select_the_best_chromosome(current_population,
                                                                                      likelihood_function, data.rep),
-                                                          pop_size, cant_genes, cant_mutations)
+                                                          pop_size, num_genes, num_mutations)
                 current_population = repair_population(current_population)
-                threshold = ((cant_genes*cant_genes)-cant_genes)//4
+                threshold = ((num_genes*num_genes)-num_genes)//4
 
             print("\tcreated.")
 
@@ -95,7 +95,7 @@ def main():
 
         # Creating and displaying of the composite model
         print("* Creating the composite model...")
-        composite_model = model_creator(current_population, cant_genes, likelihood_function)
+        composite_model = model_creator(current_population, num_genes, likelihood_function)
         print("\tcreated.\n")
 
         view_model(composite_model, "COMPOSITE MODEL (ROUNDED TO 3 DECIMALS)")
@@ -136,7 +136,7 @@ def main():
     for i in range(0, len(amalgamated_population)):
         write_matrix_file("../Chromosomes for Amalgamated Model/Chromosome " + str(i + 1) + ".txt", composite_model)
 
-    amalgamated_model = model_creator(amalgamated_population, cant_genes, likelihood_function)
+    amalgamated_model = model_creator(amalgamated_population, num_genes, likelihood_function)
     print("\tcreated.\n")
 
     view_model(amalgamated_model, "AMALGAMATED MODEL (ROUNDED TO 3 DECIMALS)")

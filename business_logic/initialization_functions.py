@@ -14,7 +14,7 @@ from random import randint
 # ========================
 
 # FUNCTION: seed_population
-def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
+def seed_population(pop_size, num_genes, per_ones, likelihood_function, rep):
     """
     An algorithm to create a more diverse first population. Based on the following steps:
         1) Randomly generate N DAGS (generate N DGs and then fix). Compute relative likelihoods for these N
@@ -31,7 +31,7 @@ def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
     Args:
         pop_size : INT
             The desired population size
-        cant_genes : INT
+        num_genes : INT
             The desired amount of genes for each chromosome
         per_ones : INT
             The percentage of ones based on matrix's size
@@ -49,7 +49,7 @@ def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
     part_b_percentage = [60, 70, 80]
 
     initial_population = []
-    initial_population.extend(population_creator(pop_size, cant_genes, per_ones))
+    initial_population.extend(population_creator(pop_size, num_genes, per_ones))
     initial_population = repair_population(initial_population)
 
     likelihood_result_calculator(initial_population, likelihood_function, rep)
@@ -77,7 +77,7 @@ def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
                 else:
                     index += 1
 
-        new_population.extend(population_creator(complete_percentage, cant_genes, per_ones))
+        new_population.extend(population_creator(complete_percentage, num_genes, per_ones))
 
         initial_population = new_population
         initial_population = repair_population(initial_population)
@@ -124,14 +124,14 @@ def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
 
 
 # FUNCTION population_creator
-def population_creator(pop_size, cant_genes, per_ones):
+def population_creator(pop_size, num_genes, per_ones):
     """
     Returns a list of chromosomes, created by random methods.
 
     Args:
         pop_size : INT
             The desired population size
-        cant_genes : INT
+        num_genes : INT
             The desired amount of genes for each chromosome
         per_ones : INT
             The percentage of ones based on matrix's size
@@ -142,17 +142,17 @@ def population_creator(pop_size, cant_genes, per_ones):
     """
     population = []
     for i in range(0, pop_size):
-        population.append(Chromosome(create_random_genes(cant_genes, per_ones)))
+        population.append(Chromosome(create_random_genes(num_genes, per_ones)))
     return population
 
 
 # FUNCTION: create_random_genes
-def create_random_genes(cant_genes, per_ones):
+def create_random_genes(num_genes, per_ones):
     """
     Creates a random matrix that will be used as genes for an initial population's chromosome.
 
     Args:
-        cant_genes : INT
+        num_genes : INT
             The desired amount of genes for each chromosome
         per_ones : INT
             The percentage of ones based on matrix's size
@@ -161,10 +161,10 @@ def create_random_genes(cant_genes, per_ones):
         MATRIX[[INT, INT, ...], [INT, INT, ...], ...]
             This matrix represents the genes and has a random number of ones based on the 'per_ones'
     """
-    matrix = [[0 for i in range(cant_genes)] for i in range(cant_genes)]
+    matrix = [[0 for i in range(num_genes)] for i in range(num_genes)]
     matrix_size = len(matrix)*len(matrix)
-    cant_ones = randint(0, (matrix_size*per_ones)//100)
-    for i in range(0, cant_ones):
+    num_ones = randint(0, (matrix_size*per_ones)//100)
+    for i in range(0, num_ones):
         x = randint(0, len(matrix)-1)
         y = randint(0, len(matrix)-1)
         matrix[x][y] = 1

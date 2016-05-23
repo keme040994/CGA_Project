@@ -12,7 +12,7 @@ from business_logic.general_functions import *
 # ===============
 
 # FUNCTION: model_creator
-def model_creator(population, cant_genes, likelihood_function):
+def model_creator(population, num_genes, likelihood_function):
     """
     Creates the composite / amalgamated model by multiplying every chromosome to its fitness and summing them all in
     a new matrix.
@@ -20,7 +20,7 @@ def model_creator(population, cant_genes, likelihood_function):
     Args:
         population : LIST[Chromosome(), Chromosome(), ...]
             A list filled with 'Chromosome' objects
-        cant_genes : INT
+        num_genes : INT
             The amount of genes for each chromosome
         likelihood_function: INT
             Indicates the likelihood function that is going to be used
@@ -31,7 +31,7 @@ def model_creator(population, cant_genes, likelihood_function):
             The composite / amalgamated model
     """
     new_population = fitness_x_genes(population)
-    model = [[0 for i in range(cant_genes)] for i in range(cant_genes)]
+    model = [[0 for i in range(num_genes)] for i in range(num_genes)]
     for i in range(0, len(new_population)):
         genes = population[i].get_genes()
         for j in range(0, len(genes)):

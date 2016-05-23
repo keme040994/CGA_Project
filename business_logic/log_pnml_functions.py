@@ -144,7 +144,6 @@ def log_pnml_cotemporal(di_graph, rep):
     return _logMLcoef + _logMLwithParents + _logMLwithOutParents
 
 
-
 # FUNCTION: pnml_next_step_one
 def log_pnml_next_step_one(di_graph, rep):
     # number of time points and number of replicates
